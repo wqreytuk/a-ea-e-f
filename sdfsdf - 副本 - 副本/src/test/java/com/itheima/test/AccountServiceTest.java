@@ -12,6 +12,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -41,7 +42,7 @@ spring整合junit配置
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringConfiguration.class)
 public class AccountServiceTest {
-    @Autowired
+    @Resource(name = "accountService")
     private IAccountService as = null;
 
     @Test

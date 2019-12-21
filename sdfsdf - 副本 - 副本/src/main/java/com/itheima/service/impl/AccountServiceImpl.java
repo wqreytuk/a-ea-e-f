@@ -23,101 +23,24 @@ public class AccountServiceImpl implements IAccountService {
     @Resource(name = "transactionManager")
     private TransactionManager transactionManager;
 
-
-//    public void setAccountDao(IAccountDao accountDao) {
-//        this.accountDao = accountDao;
-//    }
-
     public List<Account> findAllAccount() throws SQLException {
-        try {
-            //开启事务
-            transactionManager.beginTransaction();
-            //执行操作
-            List<Account> accounts = accountDao.findAllAccount();
-            //提交事务
-            transactionManager.commit();
-            //返回结果
-            return accounts;
-        } catch (Exception e) {
-            //回滚操作
-            transactionManager.rollback();
-            throw new RuntimeException(e);
-        } finally {
-            //释放连接
-            transactionManager.release();
-        }
+        return accountDao.findAllAccount();
     }
 
     public Account findAccountById(Integer accountId) throws SQLException {
-        try {
-            //开启事务
-            transactionManager.beginTransaction();
-            //执行操作
-            Account account = accountDao.findAccountById(accountId);
-            //提交事务
-            transactionManager.commit();
-            //返回结果
-            return account;
-        } catch (Exception e) {
-            //回滚操作
-            transactionManager.rollback();
-            throw new RuntimeException(e);
-        } finally {
-            //释放连接
-            transactionManager.release();
-        }
+        return accountDao.findAccountById(accountId);
     }
 
     public void saveAccount(Account account) throws SQLException {
-        try {
-            //开启事务
-            transactionManager.beginTransaction();
-            //执行操作
-            accountDao.saveAccount(account);
-            //提交事务
-            transactionManager.commit();
-        } catch (Exception e) {
-            //回滚操作
-            transactionManager.rollback();
-        } finally {
-            //释放连接
-            transactionManager.release();
-        }
         accountDao.saveAccount(account);
     }
 
     public void updateAccount(Account account) throws SQLException {
-        try {
-            //开启事务
-            transactionManager.beginTransaction();
-            //执行操作
-             accountDao.updateAccount(account);
-            //提交事务
-            transactionManager.commit();
-        } catch (Exception e) {
-            //回滚操作
-            transactionManager.rollback();
-        } finally {
-            //释放连接
-            transactionManager.release();
-        }
+        accountDao.updateAccount(account);
     }
 
     public void deleteAccount(Integer accountId) throws SQLException {
-        try {
-            //开启事务
-            transactionManager.beginTransaction();
-            //执行操作
-            accountDao.deleteAccount(accountId);
-            //提交事务
-            transactionManager.commit();
-        } catch (Exception e) {
-            //回滚操作
-            transactionManager.rollback();
-        } finally {
-            //释放连接
-            transactionManager.release();
-        }
+        accountDao.deleteAccount(accountId);
     }
 
     /*
@@ -129,33 +52,19 @@ public class AccountServiceImpl implements IAccountService {
        要达到的目的就是下面的这些数据库操作成为原子级操作，要执行就都执行，要么就全都不执行
     */
     public void transfer(String sourceName, String tragetName, float money) throws SQLException {
-        try {
-            //开启事务
-            transactionManager.beginTransaction();
-            //执行操作
-            //根据名称查询转出账户
-            Account source = accountDao.findAccountByName(sourceName);
-            //根据名称查询转入账户
-            Account target = accountDao.findAccountByName(tragetName);
-            //转出账户减钱
-            source.setMoney(source.getMoney() - money);
-            //转入账户加钱
-            target.setMoney(target.getMoney() + money);
-            //更新转出账户
-            accountDao.updateAccount(source);
+        //根据名称查询转出账户
+        Account source = accountDao.findAccountByName(sourceName);
+        //根据名称查询转入账户
+        Account target = accountDao.findAccountByName(tragetName);
+        //转出账户减钱
+        source.setMoney(source.getMoney() - money);
+        //转入账户加钱
+        target.setMoney(target.getMoney() + money);
+        //更新转出账户
+        accountDao.updateAccount(source);
 
-            int i = 1/0;
-            //更新转入账户
-            accountDao.updateAccount(target);
-            //提交事务
-            transactionManager.commit();
-        } catch (Exception e) {
-            //回滚操作
-            transactionManager.rollback();
-            e.printStackTrace();
-        } finally {
-            //释放连接
-            transactionManager.release();
-        }
+        int i = 1/0;
+        //更新转入账户
+        accountDao.updateAccount(target);
     }
 }
